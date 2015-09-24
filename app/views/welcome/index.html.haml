@@ -1,40 +1,52 @@
+- json_hash = {"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }
+- reg_str = "q:\"'</script>"
+- xml_str = "<xml x=\"a\">this<script></script></xml>"
+
+<!-- NOTE: str.html_safe == raw(str) -->
+
 #H1 :javascript
 <!-- :javascript -->
-- #security var shs  = "#{"q:\"'</script>".html_safe }"
-- #security var xhs  = "#{("<xml x=\"a\">this<script></script></xml>").html_safe}";
+- #security var h = #{json_hash};
+- #security var rh = #{raw(json_hash)};
+- #syntax   var jh = #{j(json_hash)};
+- #syntax   var rjh = #{raw(j(json_hash))};
+- #security var rs  = "#{raw(reg_str)}"
+- #security var rx  = "#{raw(xml_str)}";
 
 :javascript
-  var rj    = #{{"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json};
-  var jhs   = #{{"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json.html_safe};
-  //var jj    = #{j({"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json)};
-  //var jjhs  = #{j({"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json).html_safe};
+  // lets avoid, since it cares about holding tag
+  var j    = #{json_hash.to_json};
+  // suggesting:
+  var rj   = #{raw(json_hash.to_json)};
+  //var jj    = #{j(json_hash.to_json)};
+  //var rjj  = #{raw j(json_hash.to_json)};
 
-  // var rs   = "#{"q:\"'</script>"}";
+  // var rs   = "#{reg_str}";
   // security error
-  // var js   = "#{j("q:\"'</script>") }";
-  var jshs = "#{j("q:\"'</script>").html_safe }";
+  // var js   = "#{j(reg_str) }";
+  var rjs = "#{raw(j(reg_str))}";
 
-  //var rx   = "#{"<xml x=\"a\">this<script></script></xml>"}";
+  //var rx   = "#{xml_str}";
   // security error
-  //var jx   = "#{j("<xml x=\"a\">this<script></script></xml>")}";
-  var jxhs = "#{j("<xml x=\"a\">this<script></script></xml>").html_safe}";
+  //var jx   = "#{j(xml_str)}";
+  var rjx = "#{raw(j(xml_str))}";
 
 #H1 %script
-- # syntax: var rj    = #{{"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json};
-- # syntax: var jj    = #{j({"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json)};
-- # var jjhs  = #{j({"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json).html_safe};
+- # syntax: var rj    = #{json_hash.to_json};
+- # syntax: var jj    = #{j(json_hash.to_json)};
+- # var rjj  = #{raw(j(json_hash.to_json))};
 
-- #var rs   = "#{"q:\"'</script>"}";
-- #var js   = "#{j("q:\"'</script>") }"
-- #security var shs  = "#{"q:\"'</script>".html_safe }"
+- #var s   = "#{reg_str}";
+- #var js   = "#{j(reg_str) }"
+- #security var rs  = "#{raw(reg_str)}"
 
-- #syntax var rx   = "#{"<xml x=\"a\">this<script></script></xml>"}";
-- #syntax var jx   = "#{j("<xml x=\"a\">this<script></script></xml>")}";
-- #security var xhs  = "#{("<xml x=\"a\">this<script></script></xml>").html_safe}";
+- #syntax var x   = "#{xml_str}";
+- #syntax var jx   = "#{j(xml_str)}";
+- #security var rx  = "#{raw(xml_str)}";
 %script
-  var jhs   = #{{"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json.html_safe};
+  var rj   = #{raw(json_hash.to_json)};
 
-  var jshs = "#{j("q:\"'</script>").html_safe }"
+  var rjs = "#{raw(j(reg_str))}"
 
-  var jxhs = "#{j("<xml x=\"a\">this<script></script></xml>").html_safe}";
+  var rjx = "#{raw(j(xml_str))}";
 
