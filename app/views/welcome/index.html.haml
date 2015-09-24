@@ -1,0 +1,40 @@
+#H1 :javascript
+<!-- :javascript -->
+- #security var shs  = "#{"q:\"'</script>".html_safe }"
+- #security var xhs  = "#{("<xml x=\"a\">this<script></script></xml>").html_safe}";
+
+:javascript
+  var rj    = #{{"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json};
+  var jhs   = #{{"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json.html_safe};
+  //var jj    = #{j({"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json)};
+  //var jjhs  = #{j({"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json).html_safe};
+
+  // var rs   = "#{"q:\"'</script>"}";
+  // security error
+  // var js   = "#{j("q:\"'</script>") }";
+  var jshs = "#{j("q:\"'</script>").html_safe }";
+
+  //var rx   = "#{"<xml x=\"a\">this<script></script></xml>"}";
+  // security error
+  //var jx   = "#{j("<xml x=\"a\">this<script></script></xml>")}";
+  var jxhs = "#{j("<xml x=\"a\">this<script></script></xml>").html_safe}";
+
+#H1 %script
+- # syntax: var rj    = #{{"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json};
+- # syntax: var jj    = #{j({"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json)};
+- # var jjhs  = #{j({"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json).html_safe};
+
+- #var rs   = "#{"q:\"'</script>"}";
+- #var js   = "#{j("q:\"'</script>") }"
+- #security var shs  = "#{"q:\"'</script>".html_safe }"
+
+- #syntax var rx   = "#{"<xml x=\"a\">this<script></script></xml>"}";
+- #syntax var jx   = "#{j("<xml x=\"a\">this<script></script></xml>")}";
+- #security var xhs  = "#{("<xml x=\"a\">this<script></script></xml>").html_safe}";
+%script
+  var jhs   = #{{"widgetchart" => {"a" => '5"'}, "foo" => "</script>" }.to_json.html_safe};
+
+  var jshs = "#{j("q:\"'</script>").html_safe }"
+
+  var jxhs = "#{j("<xml x=\"a\">this<script></script></xml>").html_safe}";
+
